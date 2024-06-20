@@ -9,9 +9,21 @@ export const createPurchase = async (req, res) => {
     for (const item of products) {
       const product = await Product.findByPk(item.productId);
       if (!product) {
+        await transaction.rollback();
         return res.status(404).json({ error: `Product with ID ${item.productId} not found` });
       }
+      if (product.price === 0) {
+        await transaction.rollback();
+        return res.status(400).json({ error: `Product with ID ${item.productId} cannot be purchased at price 0` });
+      }
+      if (product.quantity < item.quantity) {
+        await transaction.rollback();
+        return res.status(400).json({ error: `Not enough quantity for product ID ${item.productId}` });
+      }
       total += product.price * item.quantity;
+
+      // Descontar la cantidad del producto
+      await product.update({ quantity: product.quantity - item.quantity }, { transaction });
     }
 
     const purchase = await Purchase.create({ clientId, total }, { transaction });
