@@ -13,7 +13,7 @@ const PurchaseProduct = purchaseProductModel(sequelize);
 User.hasMany(Purchase, { as: 'purchases', foreignKey: 'clientId' });
 Purchase.belongsTo(User, { as: 'client', foreignKey: 'clientId' });
 
-Purchase.belongsToMany(Product, { through: PurchaseProduct });
-Product.belongsToMany(Purchase, { through: PurchaseProduct });
+Purchase.belongsToMany(Product, { through: PurchaseProduct, foreignKey: 'purchaseId' });
+Product.belongsToMany(Purchase, { through: PurchaseProduct, foreignKey: 'productId' });
 
 export { sequelize, User, Product, Purchase, PurchaseProduct };

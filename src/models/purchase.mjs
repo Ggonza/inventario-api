@@ -1,3 +1,4 @@
+// models/purchase.js
 import { Model, DataTypes } from 'sequelize';
 
 export default (sequelize) => {
@@ -6,22 +7,18 @@ export default (sequelize) => {
   Purchase.init({
     clientId: {
       type: DataTypes.INTEGER,
-      allowNull: false
+      allowNull: false,
     },
     total: {
       type: DataTypes.FLOAT,
-      allowNull: false
-    }
+      allowNull: false,
+    },
   }, {
     sequelize,
     modelName: 'Purchase',
-    tableName: 'Purchases'
+    tableName: 'Purchases',
+    timestamps: true,
   });
-
-  Purchase.associate = (models) => {
-    Purchase.belongsTo(models.User, { foreignKey: 'clientId' });
-    Purchase.belongsToMany(models.Product, { through: models.PurchaseProduct, foreignKey: 'purchaseId' });
-  };
 
   return Purchase;
 };
