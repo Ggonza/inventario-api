@@ -1,0 +1,12 @@
+{
+  "name": "Inventory API",
+  "version": "1.0.0",
+  "description": "API for managing inventory and purchases",
+  "title": "Inventory API Documentation",
+  "url": "http://localhost:3000",
+  "sampleUrl": "http://localhost:3000",
+  "template": {
+    "withCompare": true,
+    "withGenerator": true
+  }
+}
