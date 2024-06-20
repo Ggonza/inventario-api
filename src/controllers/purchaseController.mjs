@@ -118,3 +118,39 @@ export const deletePurchase = async (req, res) => {
     res.status(500).json({ error: 'Error deleting purchase' });
   }
 };
+
+export const getPurchasesByClient = async (req, res) => {
+  const { clientId } = req.params;
+  try {
+    const purchases = await Purchase.findAll({
+      where: { clientId },
+      include: [
+        { model: Product, through: { attributes: ['quantity'] } },
+      ],
+    });
+    if (purchases.length === 0) {
+      return res.status(404).json({ error: 'No purchases found for this client' });
+    }
+    res.status(200).json(purchases);
+  } catch (error) {
+    console.error('Error fetching purchases:', error);
+    res.status(500).json({ error: 'Error fetching purchases' });
+  }
+};
+
+export const getPurchaseTotalByClient = async (req, res) => {
+  const { clientId } = req.params;
+  try {
+    const purchases = await Purchase.findAll({
+      where: { clientId },
+    });
+    if (purchases.length === 0) {
+      return res.status(404).json({ error: 'No purchases found for this client' });
+    }
+    const total = purchases.reduce((acc, purchase) => acc + purchase.total, 0);
+    res.status(200).json({ clientId, total });
+  } catch (error) {
+    console.error('Error fetching total purchases:', error);
+    res.status(500).json({ error: 'Error fetching total purchases' });
+  }
+};
